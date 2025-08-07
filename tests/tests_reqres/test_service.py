@@ -1,23 +1,25 @@
 import json
 from jsonschema import validate
-from sqlalchemy.sql.functions import random
 
 from schemas import post_users
 import reqres
 
 def test_schema_validate_from_file():
     response = reqres.post(data={"name": "morpheus", "job": "master"})
-    body = response.json()
 
     assert response.status_code == 201
-    with open("schemas.json") as file:
+
+    body = response.json()
+
+    with open("tests/tests_reqres/schema.json") as file:
         validate(body, schema=json.loads(file.read()))
 
 def test_schema_validate_from_variable():
     response = reqres.post(data={"name": "morpheus", "job": "master"})
-    body = response.json()
 
     assert response.status_code == 201
+
+    body = response.json()
     validate(body, schema=post_users)
 
 
@@ -40,8 +42,8 @@ def test_get_users_returns_unique_users():
     assert len(ids) == len(set(ids))
 
 def test_register_success():
-    email = random.name + "@mail.w"
-    password = random.name
+    email = "eve.holt@reqres.in"
+    password = "pistol"
 
     response = reqres.register(json={"email": email, "password": password})
 
